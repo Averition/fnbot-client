@@ -37,6 +37,7 @@ const currentLoadout = {
 function buildPath(type, value) {
   if (type == "skin") return "/Game/Athena/Items/Cosmetics/Characters/" + value + "." + value;
   if (type == "emote") return "/Game/Athena/Items/Cosmetics/Dances/" + value + "." + value;
+  if (type == "backpack") return "/Game/Athena/Items/Cosmetics/Backpacks/" + value + "." + value;
 };
 
 console.log("[1] " + i18next.t("initiating", { ns: "console", lng: config.preferred_language }));
@@ -93,11 +94,14 @@ client.init().then(async (success) => {
       botWaved = true;
       fortnite.party.me.setOutfit(buildPath("skin", "CID_434_Athena_Commando_F_StealthHonor"));
       setTimeout(() => {
+          fortnite.party.me.setBackpack(buildPath("backpack", "BID_138_Celestial"));
+          setTimeout(() => {
         fortnite.party.me.setEmote(buildPath("emote", "EID_Wave"));
         setTimeout(() => {
           fortnite.party.me.clearEmote();
         }, 3000);
-      }, 1000)
+      }, 3000);
+     }, 1000)
     };
   });
   async function handleMSGInput(msg, userid) {
@@ -107,6 +111,7 @@ client.init().then(async (success) => {
     let type = "skin";
     if (command == "skin") type = "skin";
     if (command == "emote") type = "emote";
+    if (command == "backpack") type = "backpack";
     if (!serverOff) {
       var requestURL = config.server_url_base + "/api/cosmetics/search?q=" + args + "&type=" + type;
       if (config.server_version) {
@@ -131,6 +136,16 @@ client.init().then(async (success) => {
       currentLoadout.skin = args;
       return await fortnite.communicator.sendMessage(userid,  i18next.t("msg_skinchanged", { ns: "bot", lng: config.preferred_language, skin: "[" + displayName + "]" }));
     };
+    if (command == "backpack") {
+        await fortnite.party.me.setBackpack(buildPath("backpack", args));
+        if (currentLoadout.emote) {
+            await fortnite.party.me.clearEmote();
+            await fortnite.party.me.setEmote(buildPath("emote", currentLoadout.emote))
+        };
+        currentLoadout.backpack = args;
+        return await fortnite.communicator.sendMessage(userid, i18next.t("msg_backpackchanged", { ns: "bot", lng: config.preferred_language, backpack: "[" + displayName + "]" }));
+        }
+    }
     if (command == "emote") {
       await fortnite.party.me.setEmote(buildPath("emote", args));
       currentLoadout.emote = args;
