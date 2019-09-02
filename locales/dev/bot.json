@@ -2,5 +2,6 @@
     "status" : "Invite me",
     "msg_notingroup" : "Please join my current group.",
     "msg_skinchanged" : "Successfully changed my skin to {{skin}}.",
-    "msg_emotechanged" : "Successfully changed my emote to {{emote}}."
+    "msg_emotechanged" : "Successfully changed my emote to {{emote}}.",
+    "msg_backpackchanged" : "Successfully change my backpack to {{backpack}}."
 }
